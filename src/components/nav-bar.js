@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 
-export default ({loadImages}) => (
+export default () => (
 	<nav className="main-nav">
 	  <ul>
 	    <li><NavLink to='/cat'>Cats</NavLink></li>

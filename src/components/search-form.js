@@ -5,7 +5,7 @@ export default ({history, loadImages}) => {
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		history.push(input.value);
+		history.push(`/search/${input.value}`);
 		input.value = '';
 	}
 
