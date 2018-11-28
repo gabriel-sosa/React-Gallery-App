@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default ({prop}) => {
-
+export default ({history, loadImages}) => {
 	let input;
 
 	const handleSubmit = e => {
 		e.preventDefault();
-		prop.history.push(`/${input.value}`);
+		history.push(input.value);
+		input.value = '';
 	}
 
 	return (
@@ -18,5 +18,6 @@ export default ({prop}) => {
 	          <path d="M0 0h24v24H0z" fill="none"/>
 	        </svg>
 	      </button>
-	    </form>)
+	    </form>
+	)
 }

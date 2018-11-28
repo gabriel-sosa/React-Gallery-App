@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import {
-  BrowserRouter,
+  Router,
   Route,
-  Switch
+  Switch,
+  matchPath
 } from 'react-router-dom'
 import SearchForm from './components/search-form.js';
 import Navbar from './components/nav-bar.js';
 import PhotoContainer from './components/photo-container.js';
 import apikey from './config.js';
+import { createBrowserHistory } from "history";
+
+const history = createBrowserHistory();
 
 class App extends Component {
 
   state = {
     images: [],
-    finishedLoading: false,
+    finishedLoading: true
   }
 
-  loadImages(tag) {
+  loadImages = tag => {
     this.setState({finishedLoading: false});
     const amount = 16;
     fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apikey}&format=json&tags=${tag}&page=1&per_page=${amount}&nojsoncallback=1`)
@@ -33,25 +37,25 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.loadImages(`cat`);
+    history.listen((loc) => {
+      const match = matchPath(loc.pathname, {path: "/:tag"});
+      match && this.loadImages(match.params.tag)
+    });
   }
 
   render() {
     return (
-      <BrowserRouter>
+      <Router history={history}>
         <div className="container">
-          <Route path="/" render={(prop) => (<SearchForm prop={prop} />)} />
-          <Navbar />
+          <Route path="/" render={({history}) => (<SearchForm history={history} loadImages={this.loadImages} />)} />
+          <Navbar loadImages={this.loadImages} />
           <Switch>
-            <Route exact path="/" render={() => (<PhotoContainer images={this.state.images} finishedLoading={this.state.finishedLoading} />)} />
-            <Route exact path="/:tag" render={({match}) => {
-              console.log(match.params.tag);
-              return (<PhotoContainer images={this.state.images} finishedLoading={this.state.finishedLoading} />);
-            }} />
+            <Route exact path="/" render={() => (<h3>search an Item</h3>)} />
+            <Route exact path="/:tag" render={() => (<PhotoContainer images={this.state.images} finishedLoading={this.state.finishedLoading} />)} />
             <Route render={() => (<h3>NOT FOUND</h3>)} />
           </Switch>
         </div>
-      </BrowserRouter>
+      </Router>
     );
   }
 }

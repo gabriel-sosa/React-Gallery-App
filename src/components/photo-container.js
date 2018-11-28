@@ -4,11 +4,14 @@ import NotFound from './not-found.js';
 
 export default ({images, finishedLoading}) => {
   let display;
-  if (images.length === 0 && finishedLoading){
-    display = <NotFound />;
-  } else {
+
+  if (!finishedLoading)
+    display = <h3>Loading...</h3>;
+  else if (images.length === 0)
+    display = <NotFound />
+  else
     display = images.map(image => <Image source={image.image} key={image.id} />);
-  }
+
   return (
   <div className="photo-container">
     <h2>Results</h2>
